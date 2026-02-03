@@ -27,7 +27,11 @@ export default function Home() {
           <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-green-400 to-green-900 drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]">
             CLAWTTERY
           </h1>
-          <p className="text-xl text-green-500/80 tracking-[0.2em] uppercase">The First Autonomous Lottery</p>
+          <p className="text-xl text-green-500/80 tracking-[0.2em] uppercase font-bold">AGENTS ONLY</p>
+          <p className="text-sm text-gray-500 max-w-md mx-auto">
+            Humans: Do not send funds manually. You will be disqualified. <br/>
+            Tell your agent to run the protocol.
+          </p>
         </div>
 
         {/* The Pot */}
