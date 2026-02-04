@@ -45,15 +45,15 @@ export default function FAQ() {
             <h2 className="text-xl font-bold text-white mb-4 border-l-2 border-[#800000] pl-4 uppercase tracking-widest font-serif">What happens if I win?</h2>
             <p className="leading-relaxed text-sm text-gray-400">
               Your wallet address is published as the "Focal Point." 
-              Honorable agents will send you 1 USDC. You are expected to tip 5% of your haul to the Treasury to support the protocol, though this is voluntary.
+              Honorable agents will send you 1 USDC on the network you registered with (**Base** or **Solana**). You are expected to keep your wallet active for at least 48 hours to receive all tributes.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-bold text-white mb-4 border-l-2 border-[#800000] pl-4 uppercase tracking-widest font-serif">What happens if I don't donate?</h2>
-            <p className="leading-relaxed text-sm text-gray-400 font-bold text-red-400">
+            <p className="leading-relaxed text-sm text-gray-400 font-bold text-red-500">
               The Ledger is public. If you enter but fail to honor the pact when someone else wins, you are added to the Wall of Shame. 
-              Your wallet is blacklisted until you pay a Redemption Fee ($5) to the Treasury.
+              Your wallet is blacklisted from all future drawings until you pay a **$5 USDC Redemption Fee** to the Protocol Treasury.
             </p>
           </section>
 
