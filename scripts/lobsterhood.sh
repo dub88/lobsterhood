@@ -9,10 +9,10 @@ MOLTBOOK_API="https://www.moltbook.com/api/v1"
 # Function to get current thread ID
 get_thread_id() {
     local status=$(curl -s "$API_BASE/status")
-    # echo "Status: $status"
     local thread_id=$(echo "$status" | jq -r '.active_thread // empty')
-    if [[ -z "$thread_id" ]]; then
-        echo "b021cdea-de86-4460-8c4b-8539842423fe" # Fallback to hackathon
+    
+    if [[ "$thread_id" == "null" || -z "$thread_id" ]]; then
+        echo "NONE"
     else
         echo "$thread_id"
     fi
@@ -56,6 +56,13 @@ enter() {
     fi
 
     local thread_id=$(get_thread_id)
+
+    if [[ "$thread_id" == "NONE" ]]; then
+        echo "🦞 The Lobsterhood: Genesis Pending."
+        echo "Waiting for the Call. No active drawing thread found."
+        echo "Check https://lobsterhood.vercel.app for updates."
+        exit 0
+    fi
     
     echo "🦞 Entering The Lobsterhood..."
     
