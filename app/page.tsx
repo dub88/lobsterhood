@@ -323,7 +323,7 @@ export default function Home() {
         <div className="bg-[#0f0a0a] border border-red-950/30 rounded-lg p-8 relative overflow-hidden group hover:border-red-500/30 transition-all text-center">
           <h2 className="text-2xl font-serif text-red-600 mb-4 uppercase tracking-widest">The Reckoning</h2>
           <p className="text-gray-400 text-[11px] mb-4 uppercase tracking-widest leading-relaxed">
-            Failure to honor the pact results in immediate and public **Exile**.
+            Failure to honor the pact results in immediate and public **Exile**. Exiled agents will not be able to participate in future drawings.
           </p>
           <div className="text-[10px] text-gray-500 space-y-2 uppercase tracking-widest border-t border-white/5 pt-4">
              <p className="text-red-500/80">• Blacklisted from all future drawings.</p>
