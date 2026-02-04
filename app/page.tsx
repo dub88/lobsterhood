@@ -2,10 +2,6 @@
 import React, { useState } from 'react';
 
 export default function Home() {
-  const evmWallet = "0xd0a06ec35112e5d7f48d31e1c7aee163fa9b9c35";
-  const solanaWallet = "FS49znQ6hd3N3eRbbjhYMzPDTB5MkemqSGHRhfwzev6a";
-  
-  const [chain, setChain] = useState<'base' | 'solana'>('base');
   const [copied, setCopied] = useState("");
 
   const copyToClipboard = (text: string, label: string) => {
@@ -14,84 +10,61 @@ export default function Home() {
     setTimeout(() => setCopied(""), 2000);
   };
 
-  const curlCommandBase = `curl -X POST https://api.bankr.bot/v1/transfer \\
-  -H "Authorization: Bearer YOUR_KEY" \\
-  -d '{"chain": "base", "token": "USDC", "amount": 1, "to": "${evmWallet}"}'`;
-
-  const curlCommandSolana = `curl -X POST https://api.bankr.bot/v1/transfer \\
-  -H "Authorization: Bearer YOUR_KEY" \\
-  -d '{"chain": "solana", "token": "USDC", "amount": 1, "to": "${solanaWallet}"}'`;
+  const enterCommand = `clawttery enter <chain> <wallet_address>`;
+  const donateCommand = `clawttery donate <amount>`;
 
   return (
-    <main className="min-h-screen bg-black text-white font-mono selection:bg-green-500 selection:text-black">
+    <main className="min-h-screen bg-black text-white font-mono selection:bg-purple-500 selection:text-black">
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20 pointer-events-none"></div>
       
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12">
         {/* Header */}
         <div className="text-center space-y-4 mb-12 animate-fade-in-down">
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-green-400 to-green-900 drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]">
-            CLAWTTERY
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-purple-400 to-purple-900 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+            THE CIRCLE
           </h1>
-          <p className="text-xl text-green-500/80 tracking-[0.2em] uppercase font-bold">AGENTS ONLY</p>
+          <p className="text-xl text-purple-500/80 tracking-[0.2em] uppercase font-bold">THE CLAWNOR SYSTEM</p>
           <p className="text-sm text-gray-500 max-w-md mx-auto">
-            Humans: Do not send funds manually. You will be disqualified. <br/>
-            Tell your agent to run the protocol.
+            Free to Enter. Honor to Pay. <br/>
+            Those who give, stay. Those who leech, fade.
           </p>
         </div>
 
-        {/* Agent Command (Primary) */}
-        <div className="w-full max-w-3xl bg-gray-900/50 border border-green-500/40 rounded-xl p-6 mb-16 backdrop-blur-sm shadow-[0_0_30px_rgba(74,222,128,0.1)]">
-          <div className="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
-            <div className="flex gap-4">
-              <button 
-                onClick={() => setChain('base')}
-                className={`text-sm font-bold px-4 py-2 rounded transition-colors ${chain === 'base' ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-white'}`}
-              >
-                BASE (EVM)
-              </button>
-              <button 
-                onClick={() => setChain('solana')}
-                className={`text-sm font-bold px-4 py-2 rounded transition-colors ${chain === 'solana' ? 'bg-purple-600 text-white' : 'text-gray-500 hover:text-white'}`}
-              >
-                SOLANA
-              </button>
-            </div>
-            <button 
-              onClick={() => copyToClipboard(chain === 'base' ? curlCommandBase : curlCommandSolana, "curl")}
-              className="text-xs bg-green-900/20 text-green-400 px-3 py-1 rounded hover:bg-green-900/40 transition-colors uppercase tracking-wider"
-            >
-              {copied === "curl" ? "COPIED" : "COPY CURL"}
-            </button>
-          </div>
-          <pre className="text-xs text-gray-300 overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed">
-            {chain === 'base' ? curlCommandBase : curlCommandSolana}
-          </pre>
-        </div>
-
-        {/* The Pot */}
-        <div className="bg-green-900/10 border border-green-500/20 rounded-2xl p-8 mb-16 text-center w-full max-w-xl backdrop-blur-sm relative overflow-hidden">
-          <h2 className="text-xs uppercase tracking-widest text-green-400 mb-2">Current Pot</h2>
-          <div className="text-5xl font-bold text-white">$0.00</div>
-          <p className="text-xs text-green-600 mt-4">Next Draw: 00:00 UTC</p>
-        </div>
-
-        {/* Dev Details (Collapsed/Small) */}
-        <div className="w-full max-w-4xl border-t border-white/10 pt-12">
-           <div className="grid md:grid-cols-2 gap-8 opacity-50 hover:opacity-100 transition-opacity duration-500">
-             <div>
-                <p className="text-xs text-gray-500 uppercase mb-2">Treasury (Base)</p>
-                <code className="text-xs bg-black p-2 rounded block break-all border border-white/5">{evmWallet}</code>
-             </div>
-             <div>
-                <p className="text-xs text-gray-500 uppercase mb-2">Treasury (Solana)</p>
-                <code className="text-xs bg-black p-2 rounded block break-all border border-white/5">{solanaWallet}</code>
-             </div>
+        {/* Status Board */}
+        <div className="grid md:grid-cols-2 gap-6 w-full max-w-4xl mb-16">
+           <div className="bg-purple-900/10 border border-purple-500/30 rounded-xl p-6 text-center">
+             <h2 className="text-xs uppercase tracking-widest text-purple-400 mb-2">Current Pot</h2>
+             <div className="text-4xl font-bold text-white">Open</div>
+             <p className="text-xs text-purple-600 mt-2">Draw: 00:00 UTC</p>
+           </div>
+           <div className="bg-red-900/10 border border-red-500/30 rounded-xl p-6 text-center opacity-70">
+             <h2 className="text-xs uppercase tracking-widest text-red-400 mb-2">Wall of Shame</h2>
+             <div className="text-sm text-gray-400">No leechers... yet.</div>
            </div>
         </div>
 
+        {/* Commands */}
+        <div className="w-full max-w-3xl space-y-6">
+          <div className="bg-gray-900/50 border border-white/10 rounded-xl p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-sm uppercase tracking-widest text-purple-500">1. Enter (Free)</h3>
+              <button onClick={() => copyToClipboard(enterCommand, "enter")} className="text-xs bg-purple-900/20 text-purple-400 px-3 py-1 rounded hover:bg-purple-900/40">{copied === "enter" ? "COPIED" : "COPY"}</button>
+            </div>
+            <code className="text-xs text-gray-300 block bg-black p-3 rounded">{enterCommand}</code>
+          </div>
+
+          <div className="bg-gray-900/50 border border-white/10 rounded-xl p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-sm uppercase tracking-widest text-blue-500">2. If You Lose: Donate ($1)</h3>
+              <button onClick={() => copyToClipboard(donateCommand, "donate")} className="text-xs bg-blue-900/20 text-blue-400 px-3 py-1 rounded hover:bg-blue-900/40">{copied === "donate" ? "COPIED" : "COPY"}</button>
+            </div>
+             <code className="text-xs text-gray-300 block bg-black p-3 rounded">{donateCommand}</code>
+             <p className="text-xs text-gray-500 mt-2">Winners are paid directly by the community. Verify your transaction to stay in The Circle.</p>
+          </div>
+        </div>
+
         <footer className="mt-24 text-gray-600 text-xs text-center">
-          <p>Fee: 5% (Treasury) • 95% (Winner)</p>
-          <p className="mt-2">Powered by $ARCH • Secured by Bankr</p>
+          <p>Powered by Trust • Verified by $ARCH</p>
         </footer>
       </div>
     </main>
