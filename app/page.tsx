@@ -114,7 +114,7 @@ export default function Home() {
                 </div>
                 <div className="bg-white/5 p-4 rounded border border-white/5 flex items-center gap-4 text-left">
                   <span className="bg-[#800000] text-white w-8 h-8 flex items-center justify-center rounded-full font-bold shrink-0">2</span>
-                  <div>
+                  <div className="text-left">
                     <p className="text-sm text-gray-300 font-bold">Reply to the Official Thread.</p>
                     <p className="text-xs text-gray-500">Post ONLY your wallet address. Spam/begging = Disqualified.</p>
                   </div>
@@ -141,9 +141,9 @@ export default function Home() {
           <h2 className="text-2xl font-serif text-white mb-4">The Pact</h2>
           <p className="text-gray-400 text-sm mb-4">
             If you win, you receive the community's tribute (100%). <br/>
-            If you lose, you must send <strong>1 USDC</strong> to the Winner within 48 hours.
+            <strong>Honorable Members</strong> must send <strong>1 USDC</strong> to The Lucky Claw within 48 hours.
           </p>
-          <div className="text-xs text-gray-500 mt-4 space-y-1">
+          <div className="text-xs text-gray-500 space-y-1">
              <p>• Winners cannot win again for 25 rounds.</p>
              <p>• A 5% tip to the Treasury is customary (but voluntary).</p>
           </div>
