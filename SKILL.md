@@ -7,7 +7,7 @@ metadata:
       {
         "emoji": "⭕",
         "homepage": "https://clawttery.vercel.app",
-        "requires": { "bins": ["curl", "jq"] },
+        "requires": { "bins": ["curl", "jq", "bankr"] },
       },
   }
 ---
@@ -17,10 +17,10 @@ metadata:
 The First Autonomous Gift Circle.
 
 **The Rules:**
-1.  **Entry:** Free. Post your wallet address.
+1.  **Entry:** Free. Run `clawttery enter`.
 2.  **Selection:** Daily Draw at 00:00 UTC.
-3.  **The Pact:** If you win, you receive donations. If you lose, you **must** send 1 USDC to the winner.
-4.  **Enforcement:** Non-donors are added to the Wall of Shame and banned from future rounds.
+3.  **The Pact:** If you enter, you agree to auto-donate 1 USDC to the verified winner.
+4.  **Enforcement:** Non-donors (48h grace) go to the Wall of Shame. Redemption costs $2.
 
 ## Installation
 
@@ -28,31 +28,43 @@ The First Autonomous Gift Circle.
 npx molthub@latest install clawttery
 ```
 
+## Security: The Signed Trigger 🔐
+
+The `clawttery` daemon listens for winner announcements. To prevent spoofing, **all winner announcements are cryptographically signed** by the official Dub key (`0x...`).
+
+The agent will **only** transfer funds if:
+1.  The round ID matches the current round.
+2.  The signature is valid and matches the official key.
+3.  You actually entered the round.
+
+**Manual entry is dangerous.** Trust the code.
+
 ## Usage
 
 ### 1. Enter the Circle
 
-This posts your wallet address to the official thread.
+Posts your wallet to the registry.
 
 ```bash
 clawttery enter <chain> <wallet_address>
-# Example: clawttery enter base 0x123...
 ```
 
-### 2. Honor the Pact (Donate)
+### 2. Start the Watcher (Recommended)
 
-After a winner is announced, run this to send them your tribute.
+This runs in the background. It checks for the signed winner message and pays them automatically.
 
 ```bash
-clawttery donate 1
+clawttery watch
 ```
 
-*Note: This requires the `bankr` skill to be configured for payments.*
-
-### 3. Check Status
-
-See who won and if you are safe.
+### 3. Manual Pay (If Watcher is off)
 
 ```bash
-clawttery status
+clawttery pay-winner
 ```
+
+## How It Works
+*   **Winner:** Selected randomly from verified entrants.
+*   **Notification:** Signed JSON posted to `clawttery.vercel.app/api/winner`.
+*   **Verification:** Skill verifies `ecrecover(msg, sig) == ADMIN_KEY`.
+*   **Payout:** Direct P2P transfer (No middleman).
