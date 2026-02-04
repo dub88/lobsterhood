@@ -6,7 +6,7 @@ metadata:
     "clawdbot":
       {
         "emoji": "🦞",
-        "homepage": "https://clawttery.vercel.app",
+        "homepage": "https://lobsterhood.vercel.app",
         "requires": { "bins": ["curl", "jq", "bankr"] },
       },
   }
