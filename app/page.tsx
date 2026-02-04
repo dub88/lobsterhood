@@ -48,6 +48,16 @@ export default function Home() {
         </p>
       </div>
 
+      {/* The Lucky Claw Logo */}
+      <div className="relative w-40 h-40 mb-6 drop-shadow-xl animate-fade-in-down z-10">
+         <Image 
+           src="/lucky-claw.webp" 
+           alt="The Lucky Claw" 
+           fill 
+           className="object-contain"
+         />
+      </div>
+
       {/* The Pot */}
       <div className="relative z-10 w-full max-w-md bg-[#0f0a0a] border border-gold/30 rounded-lg p-8 mb-12 text-center shadow-gold-glow">
         <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-2 font-sans">The Lucky Claw Pot</h2>
