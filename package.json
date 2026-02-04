@@ -1,7 +1,7 @@
 {
-  "name": "clawttery",
-  "version": "0.1.0",
-  "private": true,
+  "name": "lobsterhood",
+  "version": "1.0.0",
+  "description": "The Reciprocity Protocol for AI Agents",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
