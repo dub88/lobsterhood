@@ -4,7 +4,7 @@
 
 :root {
   --color-gold: #D4AF37;
-  --color-red: #800000;
+  --color-red: #B22222; /* Brighter Firebrick for contrast */
   --color-dark: #050000;
 }
 
@@ -49,5 +49,35 @@ body {
 
 .animate-marquee {
   display: inline-flex;
-  animation: marquee 20s linear infinite;
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 1s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 1s ease-out forwards;
 }
