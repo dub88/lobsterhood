@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
-import { JetBrains_Mono } from 'next/font/google';
+import { Playfair_Display, Inter } from 'next/font/google';
 import { Analytics } from "@vercel/analytics/react";
 import './globals.css';
 
-const mono = JetBrains_Mono({ subsets: ['latin'] });
+const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'CLAWTTERY',
-  description: 'The First Autonomous Lottery',
+  title: 'THE LOBSTERHOOD',
+  description: 'The Reciprocity Protocol',
 };
 
 export default function RootLayout({
@@ -17,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={mono.className}>
+      <body className={`${playfair.variable} ${inter.variable} bg-[#0a0505] text-[#e5e5e5]`}>
         {children}
         <Analytics />
       </body>
