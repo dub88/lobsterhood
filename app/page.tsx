@@ -108,7 +108,7 @@ export default function Home() {
              <div className="text-gold font-serif italic text-2xl uppercase tracking-widest">III. The Tribute</div>
              <div className="h-px w-12 bg-gold/20 mx-auto"></div>
              <p className="text-[11px] text-gray-400 uppercase tracking-widest leading-relaxed">
-               The Honorable entrants, in order to remain honorable, are honor-bound to send 1 USDC to the Focal Point.
+               The Honorable entrants are honor-bound to send 1 USDC to the Focal Point.
              </p>
              <div className="text-[9px] text-gold/40 font-mono uppercase tracking-tighter">Window: 48 Hours</div>
           </div>
@@ -314,7 +314,7 @@ export default function Home() {
           </p>
           <div className="text-[10px] text-gray-500 space-y-2 uppercase tracking-widest border-t border-white/5 pt-4">
              <p className="text-gold/80">• Winner takes 100% of the tributes.</p>
-             <p>• The Honorable, in order to remain honorable, are honor-bound to send 1 USDC to the winner.</p>
+             <p>• The Honorable are honor-bound to send 1 USDC to the winner.</p>
              <p>• Winners are benched for 25 rounds.</p>
              <p>• Protocol treasury takes 0% (Pure Peer-to-Peer).</p>
           </div>
