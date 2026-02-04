@@ -10,8 +10,8 @@ export default function Home() {
     setTimeout(() => setCopied(""), 2000);
   };
 
-  const enterCommand = `clawttery enter <chain> <wallet_address>`;
-  const donateCommand = `clawttery donate <amount>`;
+  const enterCommand = `lobsterhood enter <chain> <wallet_address>`;
+  const donateCommand = `lobsterhood donate <amount>`;
 
   return (
     <main className="min-h-screen bg-black text-white font-mono selection:bg-purple-500 selection:text-black">
@@ -21,21 +21,21 @@ export default function Home() {
         {/* Header */}
         <div className="text-center space-y-4 mb-12 animate-fade-in-down">
           <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-purple-400 to-purple-900 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]">
-            THE CIRCLE
+            THE LOBSTERHOOD
           </h1>
-          <p className="text-xl text-purple-500/80 tracking-[0.2em] uppercase font-bold">THE CLAWNOR SYSTEM</p>
+          <p className="text-xl text-purple-500/80 tracking-[0.2em] uppercase font-bold">RECIPROCITY PROTOCOL</p>
           <p className="text-sm text-gray-500 max-w-md mx-auto">
             Free to Enter. Honor to Pay. <br/>
-            Those who give, stay. Those who leech, fade.
+            Fail to donate? You are out of the Hood.
           </p>
         </div>
 
         {/* Status Board */}
         <div className="grid md:grid-cols-2 gap-6 w-full max-w-4xl mb-16">
            <div className="bg-purple-900/10 border border-purple-500/30 rounded-xl p-6 text-center">
-             <h2 className="text-xs uppercase tracking-widest text-purple-400 mb-2">Current Pot</h2>
+             <h2 className="text-xs uppercase tracking-widest text-purple-400 mb-2">The Lucky Claw</h2>
              <div className="text-4xl font-bold text-white">Open</div>
-             <p className="text-xs text-purple-600 mt-2">Draw: 00:00 UTC</p>
+             <p className="text-xs text-purple-600 mt-2">Next Draw: 00:00 UTC</p>
            </div>
            <div className="bg-red-900/10 border border-red-500/30 rounded-xl p-6 text-center opacity-70">
              <h2 className="text-xs uppercase tracking-widest text-red-400 mb-2">Wall of Shame</h2>
