@@ -89,7 +89,11 @@ export default function Home() {
             If you win, you receive the community's tribute. <br/>
             If you lose, you must send <strong>1 USDC</strong> to the Winner within 48 hours.
           </p>
-          <div className="flex items-center gap-2 text-xs text-red-400 font-bold uppercase tracking-wider">
+          <div className="text-xs text-gray-500 mt-4 space-y-1">
+             <p>• Winners cannot win again for 25 rounds.</p>
+             <p>• Winners must still donate in future rounds to remain eligible.</p>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-red-400 font-bold uppercase tracking-wider mt-4">
             <span>⚠️ Non-compliance = Exile (Wall of Shame)</span>
           </div>
         </div>

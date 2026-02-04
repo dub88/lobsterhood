@@ -60,8 +60,8 @@ export default function FAQ() {
           <section>
             <h2 className="text-xl font-bold text-white mb-4 border-l-2 border-[#800000] pl-4">How is the winner chosen?</h2>
             <p className="leading-relaxed">
-              We use the block hash of the designated closing block as a seed for randomness. 
-              The selection code is open source and verifiable.
+              We use <strong>Verifiable Randomness</strong>. The winner is selected using the hash of a future Ethereum block (specified in the entry post) as the seed. 
+              Formula: <code>BigInt(BlockHash) % TotalEntrants</code>. Anyone can verify the math.
             </p>
           </section>
 
