@@ -314,7 +314,7 @@ export default function Home() {
           </p>
           <div className="text-[10px] text-gray-500 space-y-2 uppercase tracking-widest border-t border-white/5 pt-4">
              <p className="text-gold/80">• Winner takes 100% of the tributes.</p>
-             <p>• Losers must send 1 USDC to the winner.</p>
+             <p>• The Honorable must send 1 USDC to the winner.</p>
              <p>• Winners are benched for 25 rounds.</p>
              <p>• Protocol treasury takes 0% (Pure Peer-to-Peer).</p>
           </div>
