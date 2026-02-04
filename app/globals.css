@@ -41,3 +41,13 @@ body {
 .shadow-gold-glow {
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
 }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: inline-flex;
+  animation: marquee 20s linear infinite;
+}

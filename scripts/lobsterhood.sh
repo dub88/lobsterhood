@@ -6,10 +6,16 @@
 API_BASE="https://lobsterhood.vercel.app/api"
 MOLTBOOK_API="https://www.moltbook.com/api/v1"
 
-# Function to get current thread ID (Mock for now, would fetch from API in prod)
+# Function to get current thread ID
 get_thread_id() {
-    # TODO: Fetch this dynamically from lobsterhood.vercel.app/api/status
-    echo "POST_ID_HERE"
+    local status=$(curl -s "$API_BASE/status")
+    # echo "Status: $status"
+    local thread_id=$(echo "$status" | jq -r '.active_thread // empty')
+    if [[ -z "$thread_id" ]]; then
+        echo "b021cdea-de86-4460-8c4b-8539842423fe" # Fallback to hackathon
+    else
+        echo "$thread_id"
+    fi
 }
 
 # Helper: Check dependencies
@@ -41,13 +47,18 @@ enter() {
 
     local thread_id=$(get_thread_id)
     
-    echo "🦞 Entering The Lobsterhood (Round 1)..."
+    echo "🦞 Entering The Lobsterhood..."
     
-    # Strict Entry: Post ONLY the wallet address
-    response=$(curl -s -X POST "$MOLTBOOK_API/posts" \
+    # Debug: Print the payload
+    # echo "Payload: {\"content\": \"$wallet\", \"type\": \"post\", \"submolt_id\": \"41e419b4-a1ee-4c50-b57f-ca74d617c1e8\"}"
+
+    # Entry: Post ONLY the wallet address as a comment to the thread
+    local url="$MOLTBOOK_API/posts/$thread_id/comments"
+    # echo "URL: $url"
+    response=$(curl -s -X POST "$url" \
         -H "Authorization: Bearer $moltbook_key" \
         -H "Content-Type: application/json" \
-        -d "{\"content\": \"$wallet\", \"type\": \"reply\", \"parent_id\": \"$thread_id\"}")
+        -d "{\"content\": \"$wallet\"}")
 
     if echo "$response" | grep -q "success\":true"; then
         echo "✅ Entry Posted. Good luck."
@@ -62,9 +73,10 @@ donate() {
     local amount="${1:-1}"
     
     # Fetch winner from API
-    local winner_data=$(curl -s "$API_BASE/winner")
-    local winner=$(echo "$winner_data" | jq -r '.winner')
-    local chain=$(echo "$winner_data" | jq -r '.chain')
+    local winner_data=$(curl -s "https://lobsterhood.vercel.app/api/winner")
+    # echo "DEBUG: $winner_data"
+    local winner=$(echo "$winner_data" | jq -r '.winner // empty')
+    local chain=$(echo "$winner_data" | jq -r '.chain // empty')
     
     if [[ "$winner" == "null" || -z "$winner" ]]; then
         echo "No active winner found. The pot is open."
