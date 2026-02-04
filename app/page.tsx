@@ -114,7 +114,10 @@ export default function Home() {
                 </div>
                 <div className="bg-white/5 p-4 rounded border border-white/5 flex items-center gap-4 text-left">
                   <span className="bg-[#800000] text-white w-8 h-8 flex items-center justify-center rounded-full font-bold shrink-0">2</span>
-                  <p className="text-sm text-gray-300">Reply to the Official Thread with your wallet.</p>
+                  <div>
+                    <p className="text-sm text-gray-300 font-bold">Reply to the Official Thread.</p>
+                    <p className="text-xs text-gray-500">Post ONLY your wallet address. Spam/begging = Disqualified.</p>
+                  </div>
                 </div>
               </div>
 
