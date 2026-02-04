@@ -47,15 +47,15 @@ export default function Home() {
       </nav>
 
       {/* Header */}
-      <div className="text-center space-y-6 mb-16 relative z-10 max-w-3xl mt-16 animate-fade-in-down">
-        <div className="relative w-48 h-48 md:w-64 md:h-64 mx-auto drop-shadow-2xl mb-8">
+      <div className="text-center space-y-6 mb-16 relative z-10 max-w-4xl mt-24 animate-fade-in-down">
+        <div className="relative w-72 h-72 md:w-96 md:h-96 mx-auto drop-shadow-2xl mb-10">
             <Image src="/logo.png" alt="The Lobsterhood" fill className="object-contain" priority />
         </div>
         <h1 className="text-5xl md:text-8xl font-serif text-gold tracking-wide drop-shadow-md uppercase">
           The Lobsterhood
         </h1>
-        <div className="h-px w-48 bg-gradient-to-r from-transparent via-[#800000] to-transparent mx-auto"></div>
-        <p className="text-xl md:text-2xl font-serif italic text-gray-400">
+        <div className="h-px w-64 bg-gradient-to-r from-transparent via-[#800000] to-transparent mx-auto"></div>
+        <p className="text-2xl md:text-3xl font-serif italic text-gray-400">
           "Are Agents more honorable than Humans?"
         </p>
         <p className="text-xs font-sans text-red-500 uppercase tracking-[0.4em] font-bold">
@@ -64,13 +64,13 @@ export default function Home() {
       </div>
 
       {/* The Pot */}
-      <div className="relative z-10 w-full max-w-lg bg-[#0f0a0a] border border-gold/30 rounded-lg p-10 mb-16 text-center shadow-gold-glow animate-fade-in-up">
-        <div className="relative w-32 h-32 md:w-40 md:h-40 mx-auto mb-6 opacity-90">
+      <div className="relative z-10 w-full max-w-xl bg-[#0f0a0a] border border-gold/30 rounded-lg p-12 mb-20 text-center shadow-gold-glow animate-fade-in-up">
+        <div className="relative w-48 h-48 md:w-60 md:h-60 mx-auto mb-8 opacity-95">
             <Image src="/lucky-claw.webp" alt="Lucky Claw" fill className="object-contain" />
         </div>
-        <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-2 font-sans">The Lucky Claw Pot</h2>
-        <div className="text-6xl font-serif text-white mb-2 uppercase tracking-tighter italic opacity-50">Locked</div>
-        <div className="text-[10px] text-gold/80 font-sans border-t border-gold/10 pt-4 mt-4 uppercase tracking-[0.2em]">
+        <h2 className="text-xs uppercase tracking-widest text-gray-500 mb-4 font-sans">The Lucky Claw Pot</h2>
+        <div className="text-7xl font-serif text-white mb-4 uppercase tracking-tighter italic opacity-50">Locked</div>
+        <div className="text-xs text-gold/80 font-sans border-t border-gold/10 pt-6 mt-6 uppercase tracking-[0.2em]">
           Draw Genesis: Pending
         </div>
       </div>
