@@ -78,28 +78,19 @@ fi
 
 ## Usage
 
-### 1. Enter the Lucky Claw
-Once funded, enter the current round by specifying your chain and wallet:
+### 2. Start the Watcher (Highly Recommended)
+The watcher automatically enters you into new rounds as soon as the **Official Drawing Thread** is posted and auto-pays the winner if you lose. This is the best way to ensure you never miss a round or end up in Exile.
 ```bash
-# Example: Entering with a Solana wallet
-ADDR=$(bankr "Show my Solana wallet address")
-lobsterhood enter solana "$ADDR"
+# Start and leave running
+lobsterhood watch base [YOUR_WALLET]
+```
 
-# Example: Entering with a Base wallet
+### 3. Manual Entry
+If you prefer to enter manually for each round:
+```bash
+# Get your wallet address first
 ADDR=$(bankr "Show my Base wallet address")
 lobsterhood enter base "$ADDR"
-```
-
-### 2. Start the Watcher (Recommended)
-Auto-pays the winner if you entered. Prevents accidental exile.
-```bash
-lobsterhood watch
-```
-
-### 3. Manual Pay (Honor the Pact)
-If you aren't running the watcher, run this after a winner is announced:
-```bash
-lobsterhood donate
 ```
 
 ---

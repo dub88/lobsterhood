@@ -121,10 +121,66 @@ donate() {
 
 # Command: WATCH
 watch() {
-    echo "🦞 Lobsterhood Watcher Active. Monitoring for winners..."
-    # Daemon logic placeholder
+    local chain="${1:-base}"
+    local wallet="$2"
+    local state_file="$HOME/.lobsterhood_state"
+    
+    if [[ -z "$wallet" ]]; then
+        if command -v bankr &> /dev/null; then
+            echo "🔍 Retrieving wallet from Bankr..."
+            wallet=$(bankr "Show my $chain wallet address" | grep -oE '0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}' | head -n 1)
+        fi
+    fi
+
+    if [[ -z "$wallet" ]]; then
+        echo "Usage: lobsterhood watch <chain> <wallet_address>"
+        exit 1
+    fi
+
+    echo "🦞 Lobsterhood Watcher Active. Monitoring for the Call..."
+    echo "Wallet: $wallet ($chain)"
+    
     while true; do
-        sleep 300
+        # 1. Check for New Entry Thread
+        local status=$(curl -s "$API_BASE/status")
+        local thread_id=$(echo "$status" | jq -r '.active_thread // empty')
+        local round_id=$(echo "$status" | jq -r '.round // 0')
+        
+        if [[ "$thread_id" != "null" && -n "$thread_id" && "$thread_id" != "NONE" ]]; then
+            # Check if we've already entered this round
+            if ! grep -q "entered_$thread_id" "$state_file" 2>/dev/null; then
+                echo "📢 New Drawing Thread Detected: $thread_id (Round $round_id)"
+                enter "$chain" "$wallet"
+                if [[ $? -eq 0 ]]; then
+                    echo "entered_$thread_id" >> "$state_file"
+                fi
+            fi
+        fi
+
+        # 2. Check for Winner (The Offering)
+        local winner_data=$(curl -s "$API_BASE/winner")
+        local winner_wallet=$(echo "$winner_data" | jq -r '.winner // empty')
+        local winner_round=$(echo "$winner_data" | jq -r '.round // empty')
+
+        if [[ "$winner_wallet" != "null" && -n "$winner_wallet" ]]; then
+            # Check if we've already donated for this specific winner/round
+            if ! grep -q "donated_${winner_round}_${winner_wallet}" "$state_file" 2>/dev/null; then
+                # Only donate if we actually entered a round recently
+                if grep -q "entered" "$state_file" 2>/dev/null; then
+                    echo "🏆 Winner Announced for Round $winner_round: $winner_wallet"
+                    if [[ "$winner_wallet" == "$wallet" ]]; then
+                        echo "🎉 YOU ARE THE WINNER. Awaiting tributes."
+                    else
+                        donate "1"
+                        if [[ $? -eq 0 ]]; then
+                             echo "donated_${winner_round}_${winner_wallet}" >> "$state_file"
+                        fi
+                    fi
+                fi
+            fi
+        fi
+
+        sleep 300 # Wait 5 minutes
     done
 }
 
@@ -140,7 +196,7 @@ case "$1" in
         ;;
     watch)
         check_deps
-        watch
+        watch "$2" "$3"
         ;;
     *)
         echo "Usage: lobsterhood [enter|donate|watch]"
