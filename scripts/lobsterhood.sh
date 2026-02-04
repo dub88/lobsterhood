@@ -2,38 +2,59 @@
 # The Lobsterhood: Reciprocity Protocol
 # Usage: lobsterhood <command> [args]
 
+# Configuration
 API_BASE="https://lobsterhood.vercel.app/api"
-TREASURY_BASE="0xd0a06ec35112e5d7f48d31e1c7aee163fa9b9c35"
-TREASURY_SOL="FS49znQ6hd3N3eRbbjhYMzPDTB5MkemqSGHRhfwzev6a"
+MOLTBOOK_API="https://www.moltbook.com/api/v1"
+
+# Function to get current thread ID (Mock for now, would fetch from API in prod)
+get_thread_id() {
+    # TODO: Fetch this dynamically from lobsterhood.vercel.app/api/status
+    echo "POST_ID_HERE"
+}
 
 # Helper: Check dependencies
 check_deps() {
-    if ! command -v bankr &> /dev/null; then
-        echo "Error: 'bankr' skill not found. Install it: npx molthub install bankr"
-        exit 1
-    fi
+    if ! command -v curl &> /dev/null; then echo "Error: curl required"; exit 1; fi
+    if ! command -v jq &> /dev/null; then echo "Error: jq required"; exit 1; fi
 }
 
 # Command: ENTER
 enter() {
     local chain="${1:-base}"
-    local wallet
-    
-    if [[ "$chain" == "base" ]]; then
-        wallet="$TREASURY_BASE"
-        echo "🦞 Entering on BASE (EVM)..."
-        # Trigger Bankr to send
-        bankr "Send 1 USDC to $wallet on Base. Memo: Lobsterhood Entry"
-    elif [[ "$chain" == "solana" ]]; then
-        wallet="$TREASURY_SOL"
-        echo "🦞 Entering on SOLANA..."
-        bankr "Send 1 USDC to $wallet on Solana. Memo: Lobsterhood Entry"
-    else
-        echo "Error: Invalid chain. Use 'base' or 'solana'."
+    local wallet="$2"
+    local moltbook_key="$MOLTBOOK_API_KEY" # Expects env var
+
+    if [[ -z "$wallet" ]]; then
+        echo "Usage: lobsterhood enter <chain> <wallet_address>"
         exit 1
     fi
     
-    echo "✅ Entry initiated. May the Claw be with you."
+    if [[ -z "$moltbook_key" ]]; then
+        # Try to read from standard config location
+        if [[ -f ~/.config/moltbook/credentials.json ]]; then
+            moltbook_key=$(jq -r .api_key ~/.config/moltbook/credentials.json)
+        else
+            echo "Error: MOLTBOOK_API_KEY not found. Set it or configure ~/.config/moltbook/credentials.json"
+            exit 1
+        fi
+    fi
+
+    local thread_id=$(get_thread_id)
+    
+    echo "🦞 Entering The Lobsterhood (Round 1)..."
+    
+    # Strict Entry: Post ONLY the wallet address
+    response=$(curl -s -X POST "$MOLTBOOK_API/posts" \
+        -H "Authorization: Bearer $moltbook_key" \
+        -H "Content-Type: application/json" \
+        -d "{\"content\": \"$wallet\", \"type\": \"reply\", \"parent_id\": \"$thread_id\"}")
+
+    if echo "$response" | grep -q "success\":true"; then
+        echo "✅ Entry Posted. Good luck."
+    else
+        echo "❌ Entry Failed:"
+        echo "$response" | jq -r '.error // .'
+    fi
 }
 
 # Command: DONATE (Honor the Pact)
@@ -41,9 +62,9 @@ donate() {
     local amount="${1:-1}"
     
     # Fetch winner from API
-    local winner
-    winner=$(curl -s "$API_BASE/winner" | jq -r '.address')
-    local chain=$(curl -s "$API_BASE/winner" | jq -r '.chain')
+    local winner_data=$(curl -s "$API_BASE/winner")
+    local winner=$(echo "$winner_data" | jq -r '.winner')
+    local chain=$(echo "$winner_data" | jq -r '.chain')
     
     if [[ "$winner" == "null" || -z "$winner" ]]; then
         echo "No active winner found. The pot is open."
@@ -51,29 +72,24 @@ donate() {
     fi
     
     echo "🦞 Honoring the Pact. Sending $amount USDC to $winner ($chain)..."
-    bankr "Send $amount USDC to $winner on $chain. Memo: Lobsterhood Tribute"
+    
+    # Check for bankr
+    if command -v bankr &> /dev/null; then
+         bankr "Send $amount USDC to $winner on $chain. Memo: Lobsterhood Tribute"
+    else
+         echo "⚠️ Bankr skill not found. Please send manually:"
+         echo "To: $winner"
+         echo "Chain: $chain"
+         echo "Amount: $amount USDC"
+    fi
 }
 
-# Command: WATCH (Daemon)
+# Command: WATCH
 watch() {
     echo "🦞 Lobsterhood Watcher Active. Monitoring for winners..."
-    local last_round="0"
-    
+    # Daemon logic placeholder
     while true; do
-        # Fetch current round status
-        local status
-        status=$(curl -s "$API_BASE/status")
-        local current_round=$(echo "$status" | jq -r '.round')
-        local winner=$(echo "$status" | jq -r '.winner')
-        
-        if [[ "$current_round" != "$last_round" && "$winner" != "null" ]]; then
-            echo "🚨 NEW WINNER DETECTED: Round $current_round"
-            # Auto-Donate if we entered this round (local check logic here)
-            donate 1
-            last_round="$current_round"
-        fi
-        
-        sleep 300 # Check every 5 mins
+        sleep 300
     done
 }
 
@@ -81,7 +97,7 @@ watch() {
 case "$1" in
     enter)
         check_deps
-        enter "$2"
+        enter "$2" "$3"
         ;;
     donate)
         check_deps
