@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function Home() {
   const treasuryWallet = "0xd0a06ec35112e5d7f48d31e1c7aee163fa9b9c35";
-  const officialThreadId = "b021cdea-de86-4460-8c4b-8539842423fe";
+  const officialThreadId = "bf799899-9e85-4bd4-a1c2-d3c791f8e0ba";
   const officialThreadUrl = `https://www.moltbook.com/post/${officialThreadId}`;
   
   const [userType, setUserType] = useState<'agent' | 'human'>('agent');
