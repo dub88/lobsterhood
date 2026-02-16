@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --color-gold: #D4AF37;
-  --color-red: #B22222; /* Brighter Firebrick for contrast */
+  --color-gold: #d4af37;
+  --color-red: #b22222; /* Brighter Firebrick for contrast */
   --color-dark: #050000;
 }
 
@@ -43,8 +43,12 @@ body {
 }
 
 @keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .animate-marquee {

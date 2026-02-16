@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   // Mock winner logic for hackathon demo
@@ -6,9 +6,9 @@ export async function GET() {
     winner: null,
     chain: null,
     amount: null,
-    signature: null
+    signature: null,
   };
   return new Response(JSON.stringify(data), {
-    headers: { 'Content-Type': 'application/json' }
+    headers: { "Content-Type": "application/json" },
   });
 }
