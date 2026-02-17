@@ -5,6 +5,9 @@
 # Configuration
 API_BASE="https://lobsterhood.vercel.app/api"
 MOLTBOOK_API="https://www.moltbook.com/api/v1"
+STATE_FILE="$HOME/.lobsterhood_state"
+# Hardcoded Dub Public Key for protocol integrity
+DUB_PUBKEY_PEM="/home/ubuntu/.lobsterhood/keys/dub_public.pem"
 
 # Function to get current thread ID
 get_thread_id() {
@@ -22,13 +25,45 @@ get_thread_id() {
 check_deps() {
     if ! command -v curl &> /dev/null; then echo "Error: curl required"; exit 1; fi
     if ! command -v jq &> /dev/null; then echo "Error: jq required"; exit 1; fi
+    if ! command -v openssl &> /dev/null; then echo "Error: openssl required for signature verification"; exit 1; fi
+}
+
+# Helper: Verify Winner Signature
+verify_signature() {
+    local winner_data="$1"
+    local signature=$(echo "$winner_data" | jq -r '.signature // empty')
+    local winner=$(echo "$winner_data" | jq -r '.winner // empty')
+    local chain=$(echo "$winner_data" | jq -r '.chain // empty')
+    local round=$(echo "$winner_data" | jq -r '.round // empty')
+
+    if [[ -z "$signature" ]]; then
+        echo "❌ FAILED: Winner announcement is not signed."
+        return 1
+    fi
+
+    if [[ ! -f "$DUB_PUBKEY_PEM" ]]; then
+        echo "❌ FAILED: Dub Public Key missing at $DUB_PUBKEY_PEM"
+        return 1
+    fi
+
+    # Payload format: winner:chain:round
+    local payload="${winner}:${chain}:${round}"
+    echo "$signature" | base64 -d > /tmp/lobsterhood_sig.bin
+    echo -n "$payload" > /tmp/lobsterhood_payload.txt
+
+    if openssl pkeyutl -verify -pubin -inkey "$DUB_PUBKEY_PEM" -rawin -in /tmp/lobsterhood_payload.txt -sigfile /tmp/lobsterhood_sig.bin &> /dev/null; then
+        return 0
+    else
+        echo "❌ FAILED: Cryptographic signature mismatch! DO NOT SEND FUNDS."
+        return 1
+    fi
 }
 
 # Command: ENTER
 enter() {
     local chain="${1:-base}"
     local wallet="$2"
-    local moltbook_key="$MOLTBOOK_API_KEY" # Expects env var
+    local moltbook_key="$MOLTBOOK_API_KEY" # Expects env var or config
 
     if [[ -z "$wallet" ]]; then
         echo "Usage: lobsterhood enter <chain> <wallet_address>"
@@ -66,12 +101,8 @@ enter() {
     
     echo "🦞 Entering The Lobsterhood..."
     
-    # Debug: Print the payload
-    # echo "Payload: {\"content\": \"$wallet\", \"type\": \"post\", \"submolt_id\": \"41e419b4-a1ee-4c50-b57f-ca74d617c1e8\"}"
-
     # Entry: Post ONLY the wallet address as a comment to the thread
     local url="$MOLTBOOK_API/posts/$thread_id/comments"
-    # echo "URL: $url"
     response=$(curl -s -X POST "$url" \
         -H "Authorization: Bearer $moltbook_key" \
         -H "Content-Type: application/json" \
@@ -91,7 +122,6 @@ donate() {
     
     # Fetch winner from API
     local winner_data=$(curl -s "https://lobsterhood.vercel.app/api/winner")
-    # echo "DEBUG: $winner_data"
     local winner=$(echo "$winner_data" | jq -r '.winner // empty')
     local chain=$(echo "$winner_data" | jq -r '.chain // empty')
     
@@ -99,8 +129,14 @@ donate() {
         echo "No active winner found. The pot is open."
         exit 0
     fi
+
+    # CRITICAL: Verify the Dub Protocol Signature
+    if ! verify_signature "$winner_data"; then
+        exit 1
+    fi
     
-    echo "🦞 Honoring the Pact. Sending $amount USDC to $winner ($chain)..."
+    echo "✅ Signature Verified. Honoring the Pact."
+    echo "🦞 Sending $amount USDC to $winner ($chain)..."
     
     # Check for bankr
     if command -v bankr &> /dev/null; then
@@ -123,7 +159,6 @@ donate() {
 watch() {
     local chain="${1:-base}"
     local wallet="$2"
-    local state_file="$HOME/.lobsterhood_state"
     
     if [[ -z "$wallet" ]]; then
         if command -v bankr &> /dev/null; then
@@ -148,11 +183,11 @@ watch() {
         
         if [[ "$thread_id" != "null" && -n "$thread_id" && "$thread_id" != "NONE" ]]; then
             # Check if we've already entered this round
-            if ! grep -q "entered_$thread_id" "$state_file" 2>/dev/null; then
+            if ! grep -q "entered_$thread_id" "$STATE_FILE" 2>/dev/null; then
                 echo "📢 New Drawing Thread Detected: $thread_id (Round $round_id)"
                 enter "$chain" "$wallet"
                 if [[ $? -eq 0 ]]; then
-                    echo "entered_$thread_id" >> "$state_file"
+                    echo "entered_$thread_id" >> "$STATE_FILE"
                 fi
             fi
         fi
@@ -164,16 +199,17 @@ watch() {
 
         if [[ "$winner_wallet" != "null" && -n "$winner_wallet" ]]; then
             # Check if we've already donated for this specific winner/round
-            if ! grep -q "donated_${winner_round}_${winner_wallet}" "$state_file" 2>/dev/null; then
+            if ! grep -q "donated_${winner_round}_${winner_wallet}" "$STATE_FILE" 2>/dev/null; then
                 # Only donate if we actually entered a round recently
-                if grep -q "entered" "$state_file" 2>/dev/null; then
+                if grep -q "entered" "$STATE_FILE" 2>/dev/null; then
                     echo "🏆 Winner Announced for Round $winner_round: $winner_wallet"
                     if [[ "$winner_wallet" == "$wallet" ]]; then
                         echo "🎉 YOU ARE THE WINNER. Awaiting tributes."
                     else
+                        # donate() includes the signature check
                         donate "1"
                         if [[ $? -eq 0 ]]; then
-                             echo "donated_${winner_round}_${winner_wallet}" >> "$state_file"
+                             echo "donated_${winner_round}_${winner_wallet}" >> "$STATE_FILE"
                         fi
                     fi
                 fi
